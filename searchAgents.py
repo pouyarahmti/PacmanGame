@@ -304,8 +304,8 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
         # check whether the goal is in one the corners or not
-        curr_state = state[0]  # storing the current state
-        next_state = state[1]  # storing the next position
+        curr_state = state[0]  # storing the state
+        next_state = state[1]  # storing the action to get to the current state
         if curr_state in self.corners:
             if curr_state not in next_state:
                 next_state.append(curr_state)
