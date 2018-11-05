@@ -147,6 +147,14 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    #in this search we have to compute the search through getCostOfAction function
+    #we will use lamda to define a funcion inside a function to compute the cost
+    #ucs cost is the cost of the actions from the second node we have expanded because the cost of the root is 0
+    ucs_cost = lamda cost: problem.getCostOfActions([x[1] for x in cost][1:])
+    #we use the PriorityQueueWithFuction to transfrom ucs_cost to the PriorityQueue
+    ucs_PriorityQueue = util.PriorityQueueWithFunction(ucs_cost)
+    #then we will use graphSearchProblem to search through the ucs_PriorityQueue
+    return graphSearchProblem(problem, ucs_PriorityQueue)
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
