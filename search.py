@@ -167,6 +167,14 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    #astar search is like the ucs instead if has an heuristic that show be added to the cost
+    # just like ucs we define a function to compute the cost
+    #heuristic function take the current node and compute the heuristic of it and we know that the current node is cost[-1][0]
+    Astar_cost =  lambda  cost: problem.getCostOfActions([x[1] for x in cost][1:]) + heuristic(cost[-1][0], problem)
+    # we use the PriorityQueueWithFunction to transform Astar_cost to priorityQueue
+    Astar_priorityQueue = util.PriorityQueueWithFunction(Astar_cost)
+    #then we use the graphSearchProblem to search through the Astar_PriorityQueue
+    return  graphSearchProblem(problem, Astar_priorityQueue)
     util.raiseNotDefined()
 
 
