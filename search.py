@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -70,49 +71,49 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def graphSearchProblem(problem, struct):
-    #define a normal way to search in graph
+    # define a normal way to search in graph
 
-    #storeing the starting state, direction(path), cost in the struct of the problem
+    # storing the starting state, direction(path), cost in the struct of the problem
     struct.push([(problem.getStartState(), 'Stop', 0)])
 
-    #creating a dead end list for the nodes that we have visited
+    # creating a dead end list for the nodes that we have visited
     DL = []
 
-    #check whether the struct is empty or not
+    # check whether the struct is empty or not
     while not struct.isEmpty():
-        #get the path till now
+        # get the path till now
         path = struct.pop()
 
-        #current state is the first data of the last tupple in the struct
+        # current state is the first data of the last tupple in the struct
         current_state = path[-1][0]
-
-        #check whether the current state is goal or not
+        # check whether the current state is goal or not
         if problem.isGoalState(current_state):
-            #then we return the path to the goal from start except the First Stop
+            # then we return the path to the goal from start except the First Stop
             return [x[1] for x in path][1:]
 
-        #then we will expand the current state after we search whether the current state is in DL or not
+        # then we will expand the current state after we search whether the current state is in DL or not
         if current_state not in DL:
-            #we add the current state to the DL
+            # we add the current state to the DL
             DL.append(current_state)
 
-            #then we search for the available nodes that we can go from the current state
+            # then we search for the available nodes that we can go from the current state
             for available_nodes in problem.getSuccessors(current_state):
-                #the available node will return next state path and cost but we just need the next state
-                #check whether we have expand the next state before or not
+                # the available node will return next state path and cost but we just need the next state
+                # check whether we have expand the next state before or not
                 if available_nodes[0] not in DL:
-                    #we will store the whole path to the current state
+                    # we will store the whole path to the current state
                     path_to_the_available_nodes = path[:]
 
-                    #add the next node path to the parent path
+                    # add the next node path to the parent path
                     path_to_the_available_nodes.append(available_nodes)
 
-                    #add the next node to the struct
+                    # add the next node to the struct
                     struct.push(path_to_the_available_nodes)
-    #if search failed
+    # if search failed
     return False
 
 
@@ -136,26 +137,25 @@ def depthFirstSearch(problem):
     return graphSearchProblem(problem, states)
     util.raiseNotDefined()
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     # the difference between dfs and bfs is the struct and for the bfs we should use a Queue
     states = util.Queue()
-    return graphSearchProblem(problem, states
+    return graphSearchProblem(problem, states)
     util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    #in this search we have to compute the search through getCostOfAction function
-    #we will use lamda to define a funcion inside a function to compute the cost
-    #ucs cost is the cost of the actions from the second node we have expanded because the cost of the root is 0
-    ucs_cost = lamda cost: problem.getCostOfActions([x[1] for x in cost][1:])
-    #we use the PriorityQueueWithFuction to transfrom ucs_cost to the PriorityQueue
-    ucs_PriorityQueue = util.PriorityQueueWithFunction(ucs_cost)
-    #then we will use graphSearchProblem to search through the ucs_PriorityQueue
-    return graphSearchProblem(problem, ucs_PriorityQueue)
+    cost = lambda path: problem.getCostOfActions([x[1] for x in path][1:])
+    total_cost = util.PriorityQueueWithFunction(cost)
+    return graphSearchProblem(problem, total_cost)
     util.raiseNotDefined()
+
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -164,17 +164,13 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    #astar search is like the ucs instead if has an heuristic that show be added to the cost
-    # just like ucs we define a function to compute the cost
-    #heuristic function take the current node and compute the heuristic of it and we know that the current node is cost[-1][0]
-    Astar_cost =  lambda  cost: problem.getCostOfActions([x[1] for x in cost][1:]) + heuristic(cost[-1][0], problem)
-    # we use the PriorityQueueWithFunction to transform Astar_cost to priorityQueue
-    Astar_priorityQueue = util.PriorityQueueWithFunction(Astar_cost)
-    #then we use the graphSearchProblem to search through the Astar_PriorityQueue
-    return  graphSearchProblem(problem, Astar_priorityQueue)
+    cost = lambda path: problem.getCostOfActions([x[1] for x in path][1:]) + heuristic(path[-1][0], problem)
+    total_cost = util.PriorityQueueWithFunction(cost)
+    return graphSearchProblem(problem, total_cost)
     util.raiseNotDefined()
 
 
